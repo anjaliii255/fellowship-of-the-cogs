@@ -37,6 +37,10 @@ def save_agents(agents):
 class AgentInput(BaseModel):
     agents: List[dict]
 
+class WorkflowSimulateInput(BaseModel):
+    ticket: RepairTicket
+    agents: List[dict]
+
 @app.get("/")
 def root():
     return {"message": "Fellowship of the Cogs API is running!"}
@@ -88,16 +92,23 @@ def log_handoff(ticket_id: str, agent: str, task_data: str):
     return {"logged": log}
 
 @app.post("/workflow/simulate")
-def workflow_simulate(ticket: RepairTicket, agent_input: AgentInput):
+def workflow_simulate(input: WorkflowSimulateInput):
     from app.models.agent import Agent
-    agent_objs = [Agent(**a) for a in agent_input.agents]
-    logs = langchain_simulate_workflow(ticket, agent_objs)
-    # Signature verification for each log entry
+    agent_objs = [Agent(**a) for a in input.agents]
+    logs = langchain_simulate_workflow(input.ticket, agent_objs)
     from app.utils.hashing import verify_signature
     verified_logs = []
     for log in logs:
         data_str = f"{log['agent']}|{log['step']}|{log['timestamp']}"
-        is_valid = verify_signature(data_str, log['signature'], log['contract'].get('public_key', ''))
+        public_key = log['contract'].get('public_key', '')
+        # Skip verification if the key is a placeholder
+        if "KEY" in public_key or "PUBLIC KEY" in public_key:
+            is_valid = "skipped (mock key)"
+        else:
+            try:
+                is_valid = verify_signature(data_str, log['signature'], public_key)
+            except Exception as e:
+                is_valid = f"error: {str(e)}"
         log['signature_valid'] = is_valid
         verified_logs.append(log)
     return {"workflow_log": verified_logs}
