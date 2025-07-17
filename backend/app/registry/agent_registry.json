@@ -1,0 +1,58 @@
+[
+    {
+      "name": "ThermoFix AI",
+      "company": "FridgeMasters Inc.",
+      "location": "Germany",
+      "capabilities": ["diagnosis", "cooling_analysis"],
+      "cost_per_task": 250.0,
+      "jurisdiction": ["EU"],
+      "access_type": "API",
+      "trust_score": 0.92,
+      "is_ai": true
+    },
+    {
+      "name": "Nippon Compressors",
+      "company": "Nippon Components",
+      "location": "Japan",
+      "capabilities": ["compressor_supply", "compressor_installation"],
+      "cost_per_task": 300.0,
+      "jurisdiction": ["Japan", "Asia"],
+      "access_type": "Portal",
+      "trust_score": 0.87,
+      "is_ai": false
+    },
+    {
+      "name": "Bharat Repair Crew",
+      "company": "CoolTech India",
+      "location": "India",
+      "capabilities": ["onsite_repair", "warranty_processing"],
+      "cost_per_task": 180.0,
+      "jurisdiction": ["India"],
+      "access_type": "Email",
+      "trust_score": 0.78,
+      "is_ai": false
+    },
+    {
+      "name": "QuickLogistics",
+      "company": "QuickLogistics Global",
+      "location": "Brazil",
+      "capabilities": ["part_delivery", "cross_border_logistics"],
+      "cost_per_task": 220.0,
+      "jurisdiction": ["LATAM", "India", "EU"],
+      "access_type": "API",
+      "trust_score": 0.81,
+      "is_ai": true
+    },
+    {
+      "name": "WarrantyBot",
+      "company": "AutoClaims AI",
+      "location": "India",
+      "capabilities": ["fraud_detection", "invoice_verification"],
+      "cost_per_task": 90.0,
+      "jurisdiction": ["India", "EU"],
+      "access_type": "API",
+      "trust_score": 0.96,
+      "is_ai": true
+    }
+  ]
+  
