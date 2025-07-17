@@ -1,0 +1,219 @@
+/* AgentGraph.css */
+
+/* ——————————————————————————————————————
+   Modal
+—————————————————————————————————————— */
+.modal-backdrop {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(30, 34, 54, 0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .modal-container {
+    background: #fff;
+    border-radius: 18px;
+    padding: 32px 28px 24px;
+    width: 90vw;
+    max-width: 480px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.25);
+    border-top: 6px solid var(--accent-color);
+    position: relative;
+  }
+  
+  .modal-close {
+    position: absolute;
+    top: 14px; right: 18px;
+    font-size: 28px;
+    color: #bbb;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .modal-close:hover {
+    color: #e76f51;
+  }
+  
+  .modal-title {
+    margin: 0 0 16px;
+    font-size: 1.25rem;
+    letter-spacing: 0.5px;
+  }
+  
+  .break-word {
+    word-break: break-all;
+  }
+  
+  .valid {
+    color: green;
+    font-weight: 600;
+    margin-left: 8px;
+  }
+  .invalid {
+    color: red;
+    font-weight: 600;
+    margin-left: 8px;
+  }
+  
+  /* ——————————————————————————————————————
+     Toolbar & Buttons
+  —————————————————————————————————————— */
+  .graph-wrapper {
+    position: relative;
+    overflow-x: auto; /* added */
+    margin: 2rem 0;
+    text-align: center;
+  }
+  
+  .toolbar {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 12px;
+    flex-wrap: wrap; /* added */
+  }
+  
+  .btn {
+    padding: 8px 18px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: background 0.2s;
+    font-size: 0.9rem;
+  }
+  
+  .btn.primary {
+    background: #264653;
+    color: #fff;
+  }
+  .btn.primary:hover {
+    background: #457b9d;
+  }
+  
+  .btn.secondary {
+    background: #e76f51;
+    color: #fff;
+  }
+  .btn.secondary:hover {
+    background: #f4a261;
+  }
+  
+  .btn.link {
+    width: 100%;
+    padding: 4px 0;
+    font-size: 0.75rem;
+    border: 1px solid #bbb;
+    background: #fff;
+    color: #264653;
+  }
+  .btn.link:hover {
+    background: #f4faff;
+  }
+  
+  .btn.link-danger {
+    width: 100%;
+    padding: 4px 0;
+    font-size: 0.75rem;
+    border: 1px solid #bbb;
+    background: #fff;
+    color: #e76f51;
+  }
+  .btn.link-danger:hover {
+    background: #fbeee7;
+  }
+  
+  /* ——————————————————————————————————————
+     Empty state
+  —————————————————————————————————————— */
+  .empty-state {
+    color: #888;
+    font-style: italic;
+  }
+  
+  /* ——————————————————————————————————————
+     Graph Title & Canvas
+  —————————————————————————————————————— */
+  .graph-title {
+    margin-bottom: 8px;
+    color: #22223b;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  
+  .graph-canvas {
+    background: linear-gradient(120deg, #f8fafc 60%, #e0e7ef 100%);
+    border-radius: 20px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+    overflow: visible;  /* added */
+  }
+  
+  /* ——————————————————————————————————————
+     Edges & Nodes
+  —————————————————————————————————————— */
+  .edge-line {
+    stroke: #888;
+    stroke-width: 3.5;
+    stroke-dasharray: 8;
+    animation: dash 1.2s linear infinite;
+  }
+  
+  .edge-label {
+    fill: #22223b;
+    font-size: 0.9rem;
+    font-weight: bold;
+    letter-spacing: 0.2px;
+  }
+  
+  @keyframes nodePop {
+    0% { transform: scale(0.7); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  
+  .node {
+    cursor: pointer;
+    filter: drop-shadow(0 2px 12px rgba(0,0,0,0.15));
+    animation: nodePop 0.5s cubic-bezier(.5,1.8,.5,1) both;
+    transition: transform 0.18s;
+  }
+  
+  .node.hover {
+    transform: scale(1.08);
+  }
+  
+  .node-role {
+    fill: #fff;
+    font-size: 1.125rem;
+    font-weight: 700;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    letter-spacing: 0.2px;
+  }
+  
+  .node-name {
+    fill: #e9ecef;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+  
+  .tooltip rect {
+    fill: #fff;
+    stroke: #bbb;
+    stroke-width: 1.5;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.15));
+  }
+  .tooltip text {
+    font-size: 0.75rem;
+    fill: #222;
+  }
+  
+  @keyframes dash {
+    to { stroke-dashoffset: 16; }
+  }
