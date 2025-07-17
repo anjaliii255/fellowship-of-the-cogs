@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import TicketForm from "./components/TicketForm";
+import FeedbackForm from "./components/FeedbackForm";
 
 function App() {
   const [results, setResults] = useState(null);
@@ -37,6 +38,7 @@ function App() {
           )}
         </div>
       )}
+      <FeedbackForm />
       <footer style={{ textAlign: 'center', color: '#888', marginTop: 48, padding: 24 }}>
         &copy; {new Date().getFullYear()} Fellowship of the Cogs
       </footer>
