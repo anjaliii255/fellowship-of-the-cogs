@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, Body
+from fastapi import FastAPI, HTTPException, Body, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from app.models.agent import Agent as AgentPydantic
@@ -38,6 +38,11 @@ class AgentInput(BaseModel):
 class WorkflowSimulateInput(BaseModel):
     ticket: RepairTicket
     agents: List[dict]
+
+class FeedbackInput(BaseModel):
+    agent_id: str
+    rating: float
+    comment: str = ""
 
 @app.get("/")
 def root():
@@ -110,6 +115,32 @@ def privacy_contract(
 ):
     contract = generate_privacy_contract(agent_id, permitted_fields, data_jurisdiction, expiry_hours, policy)
     return {"privacy_contract": contract}
+
+@app.post("/agents/feedback")
+def agent_feedback(feedback: FeedbackInput):
+    agent_id = feedback.agent_id
+    rating = feedback.rating
+    comment = feedback.comment
+    agent = agents_collection.find_one({"id": agent_id})
+    if not agent:
+        return JSONResponse(status_code=404, content={"detail": "Agent not found"})
+    # Exponential Moving Average (EMA) for trust_score
+    alpha = 0.3  # learning rate, can be tuned
+    old_score = agent.get("trust_score", 0.0)
+    new_score = round((1 - alpha) * old_score + alpha * rating, 2)
+    # Store feedback history (append to array)
+    feedback_history = agent.get("feedback_history", [])
+    feedback_history.append({"rating": rating, "comment": comment})
+    agents_collection.update_one(
+        {"id": agent_id},
+        {"$set": {"trust_score": new_score, "feedback_history": feedback_history}}
+    )
+    return {
+        "message": "Trust score updated (EMA)",
+        "new_trust_score": new_score,
+        "feedback_count": len(feedback_history),
+        "recent_feedback": feedback_history[-3:]  # show last 3 feedbacks
+    }
 
 @app.get("/simulation/report")
 def simulation_report():
