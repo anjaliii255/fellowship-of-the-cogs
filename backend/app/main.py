@@ -1,18 +1,20 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Body
 from fastapi.middleware.cors import CORSMiddleware
-from app.models.agent import Agent
-import json
-import os
-import uuid
-from fastapi import Body
 from fastapi.responses import JSONResponse
+from app.models.agent import Agent as AgentPydantic
 from app.models.repair_ticket import RepairTicket
 from app.services.planner import plan_agents
-from app.services.workflow import generate_receipt
+from app.services.workflow import generate_receipt, langchain_simulate_workflow
 from app.services.contracts import generate_privacy_contract
-from app.services.workflow import langchain_simulate_workflow
 from pydantic import BaseModel
 from typing import List
+import uuid
+from pymongo import MongoClient
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '.env'))
 
 app = FastAPI(title="Fellowship of the Cogs: Agent API")
 
@@ -24,15 +26,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-AGENT_REGISTRY_FILE = os.path.join(os.path.dirname(__file__), "registry", "agent_registry.json")
-
-def load_agents():
-    with open(AGENT_REGISTRY_FILE, "r") as f:
-        return json.load(f)
-
-def save_agents(agents):
-    with open(AGENT_REGISTRY_FILE, "w") as f:
-        json.dump(agents, f, indent=2)
+# MongoDB setup
+MONGO_URL = os.environ.get("MONGO_URL", "mongodb://localhost:27017")
+client = MongoClient(MONGO_URL)
+db = client["fellowship"]
+agents_collection = db["agents"]
 
 class AgentInput(BaseModel):
     agents: List[dict]
@@ -51,28 +49,19 @@ def health_check():
 
 @app.get("/agents")
 def get_agents():
-    return load_agents()
+    agents = list(agents_collection.find({}, {"_id": 0}))
+    return agents
 
 @app.post("/agents/register")
-def register_agent(agent: Agent):
-    agents = load_agents()
+def register_agent(agent: AgentPydantic):
     agent_dict = agent.dict()
     if not agent_dict.get("id"):
         agent_dict["id"] = str(uuid.uuid4())
-    # Blockchain: require public_key and wallet_address
-    if not agent_dict.get("public_key"):
-        raise HTTPException(status_code=400, detail="public_key is required for blockchain identity.")
-    if not agent_dict.get("wallet_address"):
-        # Optionally, generate a wallet address from public key (stub: use hash)
-        from app.utils.hashing import hash_data
-        agent_dict["wallet_address"] = hash_data(agent_dict["public_key"])[:16]
-    agents.append(agent_dict)
-    save_agents(agents)
+    agents_collection.insert_one(agent_dict)
     return {"message": "Agent registered successfully", "agent": agent_dict}
 
 @app.post("/ticket/create")
 def create_ticket(ticket: RepairTicket):
-    # For now, just return it back
     return {"message": "Ticket created", "ticket": ticket}
 
 @app.post("/ticket/plan")
@@ -85,7 +74,6 @@ def plan(ticket: RepairTicket):
 
 @app.post("/workflow/log")
 def log_handoff(ticket_id: str, agent: str, task_data: str):
-    # Normally we'd load the agent's private key securely
     from app.utils.blockchain import generate_keys
     priv, pub = generate_keys()
     log = generate_receipt(agent, task_data, priv)
@@ -93,15 +81,14 @@ def log_handoff(ticket_id: str, agent: str, task_data: str):
 
 @app.post("/workflow/simulate")
 def workflow_simulate(input: WorkflowSimulateInput):
-    from app.models.agent import Agent
-    agent_objs = [Agent(**a) for a in input.agents]
+    from app.models.agent import Agent as AgentPydantic
+    agent_objs = [AgentPydantic(**a) for a in input.agents]
     logs = langchain_simulate_workflow(input.ticket, agent_objs)
     from app.utils.hashing import verify_signature
     verified_logs = []
     for log in logs:
         data_str = f"{log['agent']}|{log['step']}|{log['timestamp']}"
         public_key = log['contract'].get('public_key', '')
-        # Skip verification if the key is a placeholder
         if "KEY" in public_key or "PUBLIC KEY" in public_key:
             is_valid = "skipped (mock key)"
         else:
@@ -126,7 +113,6 @@ def privacy_contract(
 
 @app.get("/simulation/report")
 def simulation_report():
-    # Return a sample simulation report (dashboard-friendly)
     report = {
         "ticket_id": "ticket-1001",
         "mttr_hours": 5.2,

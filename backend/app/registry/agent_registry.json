@@ -3,11 +3,19 @@
     "name": "ThermoFix AI",
     "company": "FridgeMasters Inc.",
     "location": "Germany",
-    "capabilities": ["diagnosis", "cooling_analysis"],
-    "skills": ["diagnosis", "cooling_analysis"],
+    "capabilities": [
+      "diagnosis",
+      "cooling_analysis"
+    ],
+    "skills": [
+      "diagnosis",
+      "cooling_analysis"
+    ],
     "cost_per_task": 250.0,
     "currency": "EUR",
-    "jurisdiction": ["EU"],
+    "jurisdiction": [
+      "EU"
+    ],
     "access_type": "API",
     "trust_score": 0.92,
     "is_ai": true,
@@ -20,11 +28,20 @@
     "name": "Nippon Compressors",
     "company": "Nippon Components",
     "location": "Japan",
-    "capabilities": ["compressor_supply", "compressor_installation"],
-    "skills": ["compressor_supply", "compressor_installation"],
+    "capabilities": [
+      "compressor_supply",
+      "compressor_installation"
+    ],
+    "skills": [
+      "compressor_supply",
+      "compressor_installation"
+    ],
     "cost_per_task": 300.0,
     "currency": "JPY",
-    "jurisdiction": ["Japan", "Asia"],
+    "jurisdiction": [
+      "Japan",
+      "Asia"
+    ],
     "access_type": "Portal",
     "trust_score": 0.87,
     "is_ai": false,
@@ -37,11 +54,19 @@
     "name": "Bharat Repair Crew",
     "company": "CoolTech India",
     "location": "India",
-    "capabilities": ["onsite_repair", "warranty_processing"],
-    "skills": ["onsite_repair", "warranty_processing"],
+    "capabilities": [
+      "onsite_repair",
+      "warranty_processing"
+    ],
+    "skills": [
+      "onsite_repair",
+      "warranty_processing"
+    ],
     "cost_per_task": 180.0,
     "currency": "INR",
-    "jurisdiction": ["India"],
+    "jurisdiction": [
+      "India"
+    ],
     "access_type": "Email",
     "trust_score": 0.78,
     "is_ai": false,
@@ -54,11 +79,21 @@
     "name": "QuickLogistics",
     "company": "QuickLogistics Global",
     "location": "Brazil",
-    "capabilities": ["part_delivery", "cross_border_logistics"],
-    "skills": ["part_delivery", "cross_border_logistics"],
+    "capabilities": [
+      "part_delivery",
+      "cross_border_logistics"
+    ],
+    "skills": [
+      "part_delivery",
+      "cross_border_logistics"
+    ],
     "cost_per_task": 220.0,
     "currency": "BRL",
-    "jurisdiction": ["LATAM", "India", "EU"],
+    "jurisdiction": [
+      "LATAM",
+      "India",
+      "EU"
+    ],
     "access_type": "API",
     "trust_score": 0.81,
     "is_ai": true,
@@ -71,11 +106,20 @@
     "name": "WarrantyBot",
     "company": "AutoClaims AI",
     "location": "India",
-    "capabilities": ["fraud_detection", "invoice_verification"],
-    "skills": ["fraud_detection", "invoice_verification"],
+    "capabilities": [
+      "fraud_detection",
+      "invoice_verification"
+    ],
+    "skills": [
+      "fraud_detection",
+      "invoice_verification"
+    ],
     "cost_per_task": 90.0,
     "currency": "INR",
-    "jurisdiction": ["India", "EU"],
+    "jurisdiction": [
+      "India",
+      "EU"
+    ],
     "access_type": "API",
     "trust_score": 0.96,
     "is_ai": true,
@@ -83,5 +127,83 @@
     "openid_token": "openid-warrantybot",
     "public_key": "publickey-warrantybot",
     "public_key_pem": "-----BEGIN PUBLIC KEY-----\nWARRANTYBOTKEY\n-----END PUBLIC KEY-----"
+  },
+  {
+    "name": "Test Agent",
+    "company": "Test Company",
+    "location": "USA",
+    "jurisdiction": [
+      "USA"
+    ],
+    "capabilities": [
+      "diagnosis",
+      "repair"
+    ],
+    "skills": [
+      "electronics",
+      "mechanics"
+    ],
+    "cost_per_task": 100.0,
+    "currency": "USD",
+    "access_type": "API",
+    "trust_score": 0.95,
+    "is_ai": true,
+    "wallet_address": "0xtestagent",
+    "openid_token": "openid-testagent",
+    "public_key": "publickey-testagent",
+    "public_key_pem": "-----BEGIN PUBLIC KEY-----\nTESTAGENTKEY\n-----END PUBLIC KEY-----",
+    "id": "4bf309e8-b3aa-4dea-8be1-bb5da9bb1266"
+  },
+  {
+    "name": "Test Agent 2",
+    "company": "Test Company",
+    "location": "USA",
+    "jurisdiction": [
+      "USA"
+    ],
+    "capabilities": [
+      "diagnosis",
+      "repair"
+    ],
+    "skills": [
+      "electronics",
+      "mechanics"
+    ],
+    "cost_per_task": 100.0,
+    "currency": "USD",
+    "access_type": "API",
+    "trust_score": 0.95,
+    "is_ai": true,
+    "wallet_address": "0xtestagent",
+    "openid_token": "openid-testagent",
+    "public_key": "publickey-testagent",
+    "public_key_pem": "-----BEGIN PUBLIC KEY-----\nTESTAGENTKEY\n-----END PUBLIC KEY-----",
+    "id": "f9453d43-28e4-4ab2-a1d2-d6280ee64935"
+  },
+  {
+    "name": "Test Agent 3",
+    "company": "Test Company",
+    "location": "USA",
+    "jurisdiction": [
+      "USA"
+    ],
+    "capabilities": [
+      "diagnosis",
+      "repair"
+    ],
+    "skills": [
+      "electronics",
+      "mechanics"
+    ],
+    "cost_per_task": 100.0,
+    "currency": "USD",
+    "access_type": "API",
+    "trust_score": 0.95,
+    "is_ai": true,
+    "wallet_address": "0xtestagent",
+    "openid_token": "openid-testagent",
+    "public_key": "publickey-testagent",
+    "public_key_pem": "-----BEGIN PUBLIC KEY-----\nTESTAGENTKEY\n-----END PUBLIC KEY-----",
+    "id": "6046b98b-8f4f-4ec9-88d6-e1abf284149b"
   }
 ]
