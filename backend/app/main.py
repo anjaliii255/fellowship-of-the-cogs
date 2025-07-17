@@ -11,6 +11,8 @@ from app.services.planner import plan_agents
 from app.services.workflow import generate_receipt
 from app.services.contracts import generate_privacy_contract
 from app.services.workflow import langchain_simulate_workflow
+from pydantic import BaseModel
+from typing import List
 
 app = FastAPI(title="Fellowship of the Cogs: Agent API")
 
@@ -31,6 +33,13 @@ def load_agents():
 def save_agents(agents):
     with open(AGENT_REGISTRY_FILE, "w") as f:
         json.dump(agents, f, indent=2)
+
+class AgentInput(BaseModel):
+    agents: List[dict]
+
+@app.get("/")
+def root():
+    return {"message": "Fellowship of the Cogs API is running!"}
 
 @app.get("/health")
 def health_check():
@@ -79,12 +88,19 @@ def log_handoff(ticket_id: str, agent: str, task_data: str):
     return {"logged": log}
 
 @app.post("/workflow/simulate")
-def workflow_simulate(ticket: RepairTicket, agents: list):
-    # agents: list of agent dicts (simulate selected agents)
+def workflow_simulate(ticket: RepairTicket, agent_input: AgentInput):
     from app.models.agent import Agent
-    agent_objs = [Agent(**a) for a in agents]
+    agent_objs = [Agent(**a) for a in agent_input.agents]
     logs = langchain_simulate_workflow(ticket, agent_objs)
-    return {"workflow_log": logs}
+    # Signature verification for each log entry
+    from app.utils.hashing import verify_signature
+    verified_logs = []
+    for log in logs:
+        data_str = f"{log['agent']}|{log['step']}|{log['timestamp']}"
+        is_valid = verify_signature(data_str, log['signature'], log['contract'].get('public_key', ''))
+        log['signature_valid'] = is_valid
+        verified_logs.append(log)
+    return {"workflow_log": verified_logs}
 
 @app.post("/privacy/contract")
 def privacy_contract(
